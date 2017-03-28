@@ -1,1 +1,1 @@
-# chatMee
+# chatmee chat application nodejs + angularjs

@@ -1,0 +1,100 @@
+.users,
+.chat-history {
+	margin-top: 30px;
+	border: 1px solid #ccc;
+	height:80vh; 
+	padding-top: 20px;
+
+}
+
+.users {
+	border-right: none;
+	border-top-left-radius:2em;
+	overflow-y: scroll;
+}
+
+
+/* Let's get this party started */
+.users::-webkit-scrollbar {
+    width: 8px;
+}
+ 
+/* Handle */
+.users::-webkit-scrollbar-thumb {
+    background: rgba(51, 122, 183, 1);
+}
+
+.chat-history {
+	border-top-right-radius:2em;
+}
+
+.chat-text-box,
+.chat-send-box {
+	margin: 0;
+	padding: 0;
+	width: 100% auto;
+}
+
+.chat-send-box a {
+	width: 100%;
+	height: 34px;
+	font-size: 20px;
+}
+
+.popup {
+	width: 300px;
+	height: 250px;
+	border: 1px solid #ccc;
+	border-top-left-radius:2em;
+	border-bottom-right-radius:2em;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	top: 0;
+	margin: auto;
+	padding: 20px;
+	animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.popup a {
+	width: 260px;
+	font-size: 20px;
+}
+
+.users ul {
+	padding: 0;
+}
+
+.users ul li,
+.chat-history ul li {
+	list-style-type: none;
+}
+
+.users ul li svg{
+	margin-right: 5px;
+}
+
+.user-name {
+	position: relative;
+	top: -4px;
+}
+
+
+@keyframes shake {
+	10%, 90% {
+		transform: translate3d(-2px, 0, 0);
+	}
+
+	20%, 80% {
+		transform: translate3d(4px, 0, 0);
+	}
+
+	30%, 50%, 70% {
+		transform: translate3d(-6px, 0, 0);
+	}
+
+	40%, 60% {
+		transform: translate3d(6px, 0, 0);
+	}
+}

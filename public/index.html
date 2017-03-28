@@ -1,0 +1,77 @@
+<!DOCTYPE>
+<html>
+<head>
+	<!-- load external js libraries -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+	<!-- load internal js files -->
+	<script src="app.chat.socket.service.js"></script>
+	<script src="app.chat.js"></script>
+	<!-- load external css libraries -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- load internal css files -->
+	<link rel="stylesheet" type="text/css" href="main.css">
+
+	<title>Nodejs Chat App</title>
+</head>
+
+<body ng-app="chatApp">
+	
+	<div ng-controller='chatCtr as ctr'>
+
+		<div class="container" ng-show="!showPopup">
+			<div class="row">
+				<div class="col-md-2 users">
+					<ul>
+						<li ng-repeat="user in allUsers">
+							<div style="color: {{user.color}}">
+								<svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg">
+    								<circle cx="8" cy="8" r="8" 
+    									fill="{{user.color}}" />
+								</svg>
+								<span class="user-name">{{user.nickname}}</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-10 chat-history">
+					<ul>
+						<li ng-repeat="message in allMessages">
+							<span ng-style="{'color': message.senderColor}">{{message.senderName}} :</span>
+							<span>{{message.senderMessage}}</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-11 chat-text-box">
+					<input type="text" class="form-control" ng-model="message"
+						ng-keyup="$event.keyCode == 13 && sendMessage()">
+				</div>
+				<div class="col-md-1 chat-send-box">
+					<a class="btn btn-primary" ng-click="sendMessage()">
+						<span class="glyphicon glyphicon-send"></span>
+					</a> 
+				</div>
+			</div>
+		</div>
+
+		<div class="popup container" ng-show="showPopup">
+			<div class="form-group">
+				<label for="nickname">Nickname:</label>
+				<input type="text" class="form-control" ng-model="nickname" id="nickname">
+			</div>
+			<div class="form-group">
+				<label for="room">Room:</label>
+				<input type="text" class="form-control" id="room">
+			</div>
+			<div class="form-group">
+				<a class="btn btn-primary" ng-click="login()">
+					<span class="glyphicon glyphicon-lock"></span>
+				</a> 
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>
