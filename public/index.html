@@ -2,7 +2,8 @@
 <html>
 <head>
 	<!-- load external js libraries -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+	<script src="https://code.angularjs.org/1.6.3/angular.min.js"></script>
+	<script src="https://code.angularjs.org/1.6.3/angular-cookies.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
 	<!-- load internal js files -->
 	<script src="app.chat.socket.service.js"></script>
@@ -16,7 +17,7 @@
 </head>
 
 <body ng-app="chatApp">
-	
+
 	<div ng-controller='chatCtr as ctr'>
 
 		<div class="container" ng-show="!showPopup">
@@ -24,10 +25,10 @@
 				<div class="col-md-2 users">
 					<ul>
 						<li ng-repeat="user in allUsers">
-							<div style="color: {{user.color}}">
+							<div style="color: {{user.getColor()}}">
 								<svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg">
-    								<circle cx="8" cy="8" r="8" 
-    									fill="{{user.color}}" />
+    								<circle cx="8" cy="8" r="8"
+    									fill="{{user.getColor()}}" />
 								</svg>
 								<span class="user-name">{{user.nickname}}</span>
 							</div>
@@ -51,7 +52,7 @@
 				<div class="col-md-1 chat-send-box">
 					<a class="btn btn-primary" ng-click="sendMessage()">
 						<span class="glyphicon glyphicon-send"></span>
-					</a> 
+					</a>
 				</div>
 			</div>
 		</div>
@@ -66,9 +67,9 @@
 				<input type="text" class="form-control" id="room">
 			</div>
 			<div class="form-group">
-				<a class="btn btn-primary" ng-click="login()">
+				<a class="btn btn-primary" ng-click="register()">
 					<span class="glyphicon glyphicon-lock"></span>
-				</a> 
+				</a>
 			</div>
 		</div>
 

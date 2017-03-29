@@ -1,32 +1,18 @@
-var app = app || angular.module('chatApp', []);
+var app = app || angular.module('chatApp', ['ngCookies']);
 
-app.controller('chatCtr', function($scope, $window, socket) {  
+app.controller('chatCtr', function(
+	$scope,
+	$window,
+	socket,
+	$cookies) {
 
 	$scope.nickname = "";
-	$scope.showPopup = true;
+	$scope.showPopup = $cookies.get('currentUserId') === undefined ? true : false;
 	$scope.message = "";
 	$scope.allMessages = [];
 	$scope.allUsers = [];
 
-
-	// expand view when you recieve a new message
-	socket.register('message', function (data) {
-		$scope.allMessages = data;
-	})
-
-	// initialize all users and messages
-	socket.register('join', function (data) {
-		$scope.showPopup = false;
-		$scope.allMessages = data.allMessages;
-		$scope.allUsers = sortObject(data.allUsers)
-	});
-
-	// update users if someone exits
-	socket.register('exitChat', function (data) {
-		$scope.allUsers = sortObject(data.allUsers);
-	})
-
-	$scope.login = function () {
+	$scope.register = function () {
 		socket.send('join', $scope.nickname);
 	}
 
@@ -52,4 +38,33 @@ app.controller('chatCtr', function($scope, $window, socket) {
 		return sortedObj;
 	}
 
+	function registerSocket () {
+		// expand view when you recieve a new message
+		socket.register('message', function (data) {
+			$scope.allMessages = data;
+		})
+
+		// initialize all users and messages
+		socket.register('join', function (data) {
+			$scope.allMessages = data.allMessages;
+			$scope.allUsers = sortObject(data.allUsers);
+			$cookies.put('currentUserId', data.currentUserId);
+			$scope.showPopup = false;
+		});
+
+		// update users if someone exits
+		socket.register('exitChat', function (data) {
+			$scope.allUsers = sortObject(data.allUsers);
+		});
+	}
+
+	function init () {
+		registerSocket();
+		if ($cookies.get('currentUserId')) {
+			// auto login the system
+			socket.send('login', $cookies.get('currentUserId'));
+		}
+	}
+
+	init();
 });

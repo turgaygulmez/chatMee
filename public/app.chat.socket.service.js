@@ -1,4 +1,4 @@
-var app = app || angular.module('chatApp', []);
+var app = app || angular.module('chatApp', ['ngCookies']);
 
 app.factory('socket', function($rootScope){
 	var socket = io.connect('http://localhost:3000/');

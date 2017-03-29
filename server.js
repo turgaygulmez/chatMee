@@ -14,7 +14,7 @@ var allUsers = {};
 io.on('connection', function (client) {
 
     client.on('message', function (message) {
-        
+
         //send client message to everyone
         var data = {
             senderName: allUsers[client.id].nickname,
@@ -23,10 +23,9 @@ io.on('connection', function (client) {
         };
 
         allMessages.unshift(data);
-
         io.emit('message', allMessages);
     });
-    
+
     client.on('join', function (nickname) {
 
         var user = new User({
@@ -36,7 +35,25 @@ io.on('connection', function (client) {
 
         allUsers[client.id] = user;
 
-        io.emit('join', { 
+        io.emit('join', {
+            currentUserId: client.id,
+            allMessages: allMessages,
+            allUsers: allUsers
+        });
+
+        console.log('client joined to a room');
+    });
+
+    client.on('login', function (clientId) {
+
+        client.id = clientId;
+        allUsers[client.id].connected = true;
+        allUsers[client.id].setColor();
+
+        console.log(allUsers[client.id]);
+
+        io.emit('join', {
+            currentUserId: client.id,
             allMessages: allMessages,
             allUsers: allUsers
         });
@@ -46,13 +63,13 @@ io.on('connection', function (client) {
 
     client.on('exitChat', function () {
 
-        if (Object.keys(allUsers).length !== 0 && 
-            allUsers.constructor === Object && 
+        if (Object.keys(allUsers).length !== 0 &&
+            allUsers.constructor === Object &&
             allUsers[client.id]) {
 
             allUsers[client.id].disconnectUser();
 
-            io.emit('exitChat', { 
+            io.emit('exitChat', {
                 allUsers: allUsers
             });
 
