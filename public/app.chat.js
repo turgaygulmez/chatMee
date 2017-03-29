@@ -11,20 +11,35 @@ app.controller('chatCtr', function(
 	$scope.message = "";
 	$scope.allMessages = [];
 	$scope.allUsers = [];
+	$scope.rooms = ['room1', 'room2', 'room3'];
+	$scope.selectedRoom = 'choose a room';
 
 	$scope.register = function () {
-		socket.send('register', $scope.nickname);
+		if ($scope.selectedRoom !== 'choose a room' &&
+			$scope.nickname !== '') {
+			socket.send('register', {
+				nickname: $scope.nickname,
+				room: $scope.selectedRoom
+			});
+		}
 	}
 
 	$scope.sendMessage = function() {
 		if ($scope.message) {
-			socket.send('message', $scope.message);
+			socket.send('message', {
+				message: $scope.message,
+				room: $scope.selectedRoom				
+			});
 			$scope.message = '';
 		}
 	}
 
+	$scope.setRoom = function (room ) {
+		$scope.selectedRoom = room;
+	}
+
     $window.onbeforeunload = function () {
-    	socket.send('exitChat');
+    	socket.send('exitChat', $scope.selectedRoom);
     }
 
     /***** Helper functions ****/

@@ -5,6 +5,8 @@
 	<script src="https://code.angularjs.org/1.6.3/angular.min.js"></script>
 	<script src="https://code.angularjs.org/1.6.3/angular-cookies.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<!-- load internal js files -->
 	<script src="app.chat.socket.service.js"></script>
 	<script src="app.chat.js"></script>
@@ -65,8 +67,17 @@
 				<input type="text" class="form-control" ng-model="nickname" id="nickname">
 			</div>
 			<div class="form-group">
-				<label for="room">Room:</label>
-				<input type="text" class="form-control" id="room">
+				<div class="dropdown">
+					<button class="btn btn-primary dropdown-toggle room-selector" 
+						type="button" data-toggle="dropdown">
+						<span ng-bind="selectedRoom"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li ng-repeat="room in rooms" ng-click="setRoom(room)">
+							<a href="#">{{room}}</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 			<div class="form-group">
 				<a class="btn btn-primary" ng-click="register()">

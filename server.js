@@ -4,58 +4,78 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 var User = require("./user");
+var DB = require("./dblayer");
+
 
 var staticPath = path.join(__dirname, '/public');
 app.use(express.static(staticPath));
 
-var allMessages = [];
-var allUsers = {};
+
+var allData = {};
+var messageLimit = 50;
 
 io.on('connection', function (client) {
 
-    client.on('message', function (message) {
+    var db = new DB('chatDB');
+
+    client.on('message', function (data) {
 
         //send client message to everyone
         var msgData = {
-            senderName: allUsers[client.id].nickname,
-            senderColor: allUsers[client.id].color,
-            senderMessage: message
+            senderName: allData[data.room].allUsers[client.id].nickname,
+            senderColor: allData[data.room].allUsers[client.id].color,
+            senderMessage: data.message
         };
 
-        allMessages.unshift(msgData);
-        io.emit('message', allMessages);
+        db.add(data.room, msgData);
+
+        if (allData[data.room].allMessages.length > messageLimit) {
+            allData[data.room].allMessages.pop();
+        }
+        allData[data.room].allMessages.unshift(msgData);
+        io.in(data.room).emit('message', allData[data.room].allMessages);
     });
 
-    client.on('register', function (nickname) {
+    client.on('register', function (data) {
         var user = new User({
-            nickname: nickname,
+            nickname: data.nickname,
             connected: client.connected,
         });
 
-        allUsers[client.id] = user;
+        client.join(data.room);
 
-        io.emit('register', {
-            allMessages: allMessages,
-            allUsers: allUsers
+        if (!allData[data.room]) {
+            allData[data.room] = {};
+            allData[data.room]['allUsers'] = {};
+            allData[data.room]['allMessages'] = [];
+        }
+
+        db.get(data.room, function (dbData) {
+            allData[data.room]['allMessages'] = dbData;
+            allData[data.room].allUsers[client.id] = user;
+
+            io.in(data.room).emit('register', {
+                allMessages: allData[data.room]['allMessages'],
+                allUsers: allData[data.room].allUsers
+            });
         });
+        
     });
 
-    client.on('exitChat', function () {
+    client.on('exitChat', function (room) {
+        if (allData[room]) {
+            if (Object.keys(allData[room].allUsers).length !== 0 &&
+                allData[room].allUsers.constructor === Object &&
+                allData[room].allUsers[client.id]) {
 
-        if (Object.keys(allUsers).length !== 0 &&
-            allUsers.constructor === Object &&
-            allUsers[client.id]) {
+                allData[room].allUsers[client.id].disconnectUser();
 
-            allUsers[client.id].disconnectUser();
-
-        console.log(allUsers[client.id])
-
-            io.emit('exitChat', {
-                allUsers: allUsers
-            });
+                io.in(room).emit('exitChat', {
+                    allUsers: allData[room].allUsers
+                });
+            }
         }
     });
-
 });
 
 server.listen(3000, function() {
