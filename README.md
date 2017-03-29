@@ -5,4 +5,4 @@
 You don't have to create collection to save data. The app will handle for you. 
 
 --- install nodejs
---- type 'node serve' to run the aplication
+--- type 'node server' to run the aplication
