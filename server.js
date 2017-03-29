@@ -13,21 +13,20 @@ var allUsers = {};
 
 io.on('connection', function (client) {
 
-    client.on('message', function (data) {
+    client.on('message', function (message) {
 
         //send client message to everyone
         var msgData = {
-            senderName: allUsers[data.clientId].nickname,
-            senderColor: allUsers[data.clientId].color,
-            senderMessage: data.message
+            senderName: allUsers[client.id].nickname,
+            senderColor: allUsers[client.id].color,
+            senderMessage: message
         };
 
         allMessages.unshift(msgData);
         io.emit('message', allMessages);
     });
 
-    client.on('join', function (nickname) {
-    	console.log(nickname);
+    client.on('register', function (nickname) {
         var user = new User({
             nickname: nickname,
             connected: client.connected,
@@ -35,47 +34,25 @@ io.on('connection', function (client) {
 
         allUsers[client.id] = user;
 
-        io.emit('join', {
-            currentUserId: client.id,
+        io.emit('register', {
             allMessages: allMessages,
             allUsers: allUsers
         });
-
-        console.log('client joined to a room');
     });
 
-    client.on('login', function (clientId) {
-
-    	if (allUsers[clientId]) {
-
-    		allUsers[clientId].connectUser();
-
-	        io.emit('join', {
-	            currentUserId: clientId,
-	            allMessages: allMessages,
-	            allUsers: allUsers
-	        });
-
-	        console.log('client loged in a room');
-    	} else {
-    		client.emit('login', false);
-    	}
-
-    });
-
-    client.on('exitChat', function (clientId) {
+    client.on('exitChat', function () {
 
         if (Object.keys(allUsers).length !== 0 &&
             allUsers.constructor === Object &&
-            allUsers[clientId]) {
+            allUsers[client.id]) {
 
-            allUsers[clientId].disconnectUser();
+            allUsers[client.id].disconnectUser();
+
+        console.log(allUsers[client.id])
 
             io.emit('exitChat', {
                 allUsers: allUsers
             });
-
-            console.log('client exit from a room');
         }
     });
 

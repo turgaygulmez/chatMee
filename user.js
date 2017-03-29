@@ -4,7 +4,6 @@ class User {
 		this.nickname = obj.nickname;
 		this.connected = obj.connected;
 		this.color = this.generateColor();
-		this.colorRemain = this.color;
 	}
 
 	generateColor () {
@@ -17,11 +16,6 @@ class User {
 	disconnectUser () {
 		this.connected = false;
 		this.color = 'hsl(0, 0%, 77%)';
-	}
-
-	connectUser () {
-		this.connected = true;
-		this.color = this.colorRemain;
 	}
 }
 

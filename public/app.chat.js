@@ -7,22 +7,18 @@ app.controller('chatCtr', function(
 	$cookies) {
 
 	$scope.nickname = "";
-	$scope.showPopup = $cookies.get('currentUserId') === undefined ? true : false;
+	$scope.showPopup = true;
 	$scope.message = "";
 	$scope.allMessages = [];
 	$scope.allUsers = [];
 
 	$scope.register = function () {
-		socket.send('join', $scope.nickname);
+		socket.send('register', $scope.nickname);
 	}
 
 	$scope.sendMessage = function() {
 		if ($scope.message) {
-			socket.send('message', {
-				message: $scope.message,
-				clientId: $cookies.get('currentUserId')
-			});
-
+			socket.send('message', $scope.message);
 			$scope.message = '';
 		}
 	}
@@ -51,10 +47,9 @@ app.controller('chatCtr', function(
 		})
 
 		// initialize all users and messages
-		socket.register('join', function (data) {
+		socket.register('register', function (data) {
 			$scope.allMessages = data.allMessages;
 			$scope.allUsers = sortObject(data.allUsers);
-			$cookies.put('currentUserId', data.currentUserId);
 			$scope.showPopup = false;
 		});
 
@@ -62,22 +57,10 @@ app.controller('chatCtr', function(
 		socket.register('exitChat', function (data) {
 			$scope.allUsers = sortObject(data.allUsers);
 		});
-
-		// update users if someone exits
-		socket.register('login', function (data) {
-			if (!data) {
-				$cookies.put('currentUserId', undefined);
-				$scope.showPopup = true;
-			}
-		});
 	}
 
 	function init () {
 		registerSocket();
-		if ($cookies.get('currentUserId')) {
-			// auto login the system
-			socket.send('login', $cookies.get('currentUserId'));
-		}
 	}
 
 	init();
