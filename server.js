@@ -13,21 +13,21 @@ var allUsers = {};
 
 io.on('connection', function (client) {
 
-    client.on('message', function (message) {
+    client.on('message', function (data) {
 
         //send client message to everyone
-        var data = {
-            senderName: allUsers[client.id].nickname,
-            senderColor: allUsers[client.id].color,
-            senderMessage: message
+        var msgData = {
+            senderName: allUsers[data.clientId].nickname,
+            senderColor: allUsers[data.clientId].color,
+            senderMessage: data.message
         };
 
-        allMessages.unshift(data);
+        allMessages.unshift(msgData);
         io.emit('message', allMessages);
     });
 
     client.on('join', function (nickname) {
-
+    	console.log(nickname);
         var user = new User({
             nickname: nickname,
             connected: client.connected,
@@ -46,28 +46,30 @@ io.on('connection', function (client) {
 
     client.on('login', function (clientId) {
 
-        client.id = clientId;
-        allUsers[client.id].connected = true;
-        allUsers[client.id].setColor();
+    	if (allUsers[clientId]) {
 
-        console.log(allUsers[client.id]);
+    		allUsers[clientId].connectUser();
 
-        io.emit('join', {
-            currentUserId: client.id,
-            allMessages: allMessages,
-            allUsers: allUsers
-        });
+	        io.emit('join', {
+	            currentUserId: clientId,
+	            allMessages: allMessages,
+	            allUsers: allUsers
+	        });
 
-        console.log('client joined to a room');
+	        console.log('client loged in a room');
+    	} else {
+    		client.emit('login', false);
+    	}
+
     });
 
-    client.on('exitChat', function () {
+    client.on('exitChat', function (clientId) {
 
         if (Object.keys(allUsers).length !== 0 &&
             allUsers.constructor === Object &&
-            allUsers[client.id]) {
+            allUsers[clientId]) {
 
-            allUsers[client.id].disconnectUser();
+            allUsers[clientId].disconnectUser();
 
             io.emit('exitChat', {
                 allUsers: allUsers

@@ -4,18 +4,20 @@
 	border: 1px solid #ccc;
 	height:80vh; 
 	padding-top: 20px;
-
+	overflow-y: scroll;
 }
 
 .users {
 	border-right: none;
 	border-top-left-radius:2em;
-	overflow-y: scroll;
 }
-
 
 /* Let's get this party started */
 .users::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-history::-webkit-scrollbar {
     width: 8px;
 }
  
@@ -24,9 +26,11 @@
     background: rgba(51, 122, 183, 1);
 }
 
-.chat-history {
-	border-top-right-radius:2em;
+/* Handle */
+.chat-history::-webkit-scrollbar-thumb {
+    background: rgba(51, 122, 183, 1);
 }
+
 
 .chat-text-box,
 .chat-send-box {

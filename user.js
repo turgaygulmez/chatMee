@@ -3,10 +3,8 @@ class User {
 	constructor (obj) {
 		this.nickname = obj.nickname;
 		this.connected = obj.connected;
-		this.color = null;
-		this.textColor = this.generateColor();
-		this.disconnectedColor = 'hsl(0, 0%, 77%)';
-		this.setColor();
+		this.color = this.generateColor();
+		this.colorRemain = this.color;
 	}
 
 	generateColor () {
@@ -18,15 +16,12 @@ class User {
 
 	disconnectUser () {
 		this.connected = false;
-		setColor();
+		this.color = 'hsl(0, 0%, 77%)';
 	}
 
-	setColor () {
-		if (this.connected) {
-			this.color = this.textColor;
-		} else {
-			this.color = this.disconnectedColor;
-		}
+	connectUser () {
+		this.connected = true;
+		this.color = this.colorRemain;
 	}
 }
 

@@ -25,10 +25,10 @@
 				<div class="col-md-2 users">
 					<ul>
 						<li ng-repeat="user in allUsers">
-							<div style="color: {{user.getColor()}}">
+							<div style="color: {{user.color}}">
 								<svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg">
     								<circle cx="8" cy="8" r="8"
-    									fill="{{user.getColor()}}" />
+    									fill="{{user.color}}" />
 								</svg>
 								<span class="user-name">{{user.nickname}}</span>
 							</div>
@@ -38,7 +38,9 @@
 				<div class="col-md-10 chat-history">
 					<ul>
 						<li ng-repeat="message in allMessages">
-							<span ng-style="{'color': message.senderColor}">{{message.senderName}} :</span>
+							<span ng-style="{'color': message.senderColor}">
+								<b>{{message.senderName}} :</b>
+							</span>
 							<span>{{message.senderMessage}}</span>
 						</li>
 					</ul>

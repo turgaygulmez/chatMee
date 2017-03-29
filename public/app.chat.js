@@ -17,8 +17,14 @@ app.controller('chatCtr', function(
 	}
 
 	$scope.sendMessage = function() {
-		socket.send('message', $scope.message);
-		$scope.message = '';
+		if ($scope.message) {
+			socket.send('message', {
+				message: $scope.message,
+				clientId: $cookies.get('currentUserId')
+			});
+
+			$scope.message = '';
+		}
 	}
 
     $window.onbeforeunload = function () {
@@ -55,6 +61,14 @@ app.controller('chatCtr', function(
 		// update users if someone exits
 		socket.register('exitChat', function (data) {
 			$scope.allUsers = sortObject(data.allUsers);
+		});
+
+		// update users if someone exits
+		socket.register('login', function (data) {
+			if (!data) {
+				$cookies.put('currentUserId', undefined);
+				$scope.showPopup = true;
+			}
 		});
 	}
 
