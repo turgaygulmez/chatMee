@@ -9,7 +9,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.17.1",
-    "express": "^4.14.0",
+    "bson-ext": "^1.0.5",
+    "express": "^4.15.2",
+    "kerberos": "0.0.23",
+    "mongodb": "^2.2.25",
+    "mongodb-core": "^2.1.9",
+    "node-gyp": "^3.6.0",
+    "socket.io": "^1.7.3"
   }
 }
