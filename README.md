@@ -15,7 +15,7 @@ Languages / Frameworks:
 
 Prerequisites
 -----------
-* Install and configure mongodb in your pc with instruction [https://docs.mongodb.com/v3.2/tutorial/install-mongodb-on-windows/#install-mongodb-community-edition] URL
+* Install and configure mongodb in your pc with instruction [URL](https://docs.mongodb.com/v3.2/tutorial/install-mongodb-on-windows/#install-mongodb-community-edition)
 * Create a db called 'chatDB'
 
 Create your project
