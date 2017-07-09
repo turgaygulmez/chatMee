@@ -1,10 +1,9 @@
-var app = app || angular.module('chatApp', ['ngCookies']);
+var app = app || angular.module('chatApp', []);
 
 app.controller('chatCtr', function(
 	$scope,
 	$window,
-	socket,
-	$cookies) {
+	socket) {
 
 	$scope.nickname = "";
 	$scope.showPopup = true;
