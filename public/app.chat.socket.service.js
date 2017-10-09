@@ -1,10 +1,12 @@
 var app = app || angular.module('chatApp', []);
 
 app.factory('socket', function($rootScope) {
-	var socket = io.connect('http://localhost:3000/');
+	var private = {
+		socket: io.connect('http://localhost:3000/')
+	}
 
 	function register (eventName, callback) {
-		socket.on(eventName, function (data) {
+		private.socket.on(eventName, function (data) {
 			$rootScope.$apply(function () {
 				callback(data);
 			});
@@ -12,11 +14,12 @@ app.factory('socket', function($rootScope) {
 	}
 
 	function send (eventName, data) {
-		socket.emit(eventName, data);
+		private.socket.emit(eventName, data);
 	}
 
 	return {
 		register: register,
-		send: send
+		send: send,
+		_testonly_: private
 	};
 });

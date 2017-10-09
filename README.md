@@ -12,6 +12,7 @@ Languages / Frameworks:
 * mongodb
 * bootstrap
 * angularjs
+* Karma / Jasmine
 
 Prerequisites
 -----------
