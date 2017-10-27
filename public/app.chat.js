@@ -21,34 +21,34 @@ app.controller('chatCtr', function(
 				room: $scope.selectedRoom
 			});
 		}
-	}
+	};
 
 	$scope.sendMessage = function() {
 		if ($scope.message) {
 			socket.send('message', {
 				message: $scope.message,
-				room: $scope.selectedRoom				
+				room: $scope.selectedRoom
 			});
 			$scope.message = '';
 		}
-	}
+	};
 
 	$scope.setRoom = function (room ) {
 		$scope.selectedRoom = room;
-	}
+	};
 
     $window.onbeforeunload = function () {
     	socket.send('exitChat', $scope.selectedRoom);
-    }
+    };
 
     /***** Helper functions ****/
 
    	function sortObject(obj) {
 		var sortedObj = {};
 		var sortedKeys = Object.keys(obj).sort(function(a,b){
-			return obj[b].connected - obj[a].connected
+			return obj[b].connected - obj[a].connected;
 		});
-		for (key in sortedKeys) {
+		for (var key in sortedKeys) {
 			sortedObj[sortedKeys[key]] = obj[sortedKeys[key]];
 		}
 		return sortedObj;
@@ -58,7 +58,7 @@ app.controller('chatCtr', function(
 		// expand view when you recieve a new message
 		socket.register('message', function (data) {
 			$scope.allMessages = data;
-		})
+		});
 
 		// initialize all users and messages
 		socket.register('register', function (data) {
